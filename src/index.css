@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Bảng màu dạng kênh RGB "r g b" để Tailwind ghép độ mờ */
+  :root {
+    color-scheme: light;
+    --c-paper: 253 251 247;        /* #FDFBF7 */
+    --c-paper-deep: 245 239 230;   /* #F5EFE6 */
+    --c-surface: 240 234 225;      /* #F0EAE1 */
+    --c-surface-line: 213 199 179; /* #D5C7B3 */
+    --c-ink: 44 34 30;             /* #2C221E */
+    --c-ink-soft: 107 91 82;       /* #6B5B52 */
+    --c-ink-faint: 118 103 92;     /* #76675C */
+    --c-brass: 197 160 89;         /* #C5A059 */
+    --c-brass-deep: 126 98 48;     /* #7E6230 */
+    --c-oxblood: 140 58 43;        /* #8C3A2B */
+    --c-oxblood-light: 180 96 79;  /* #B4604F */
+    --c-moss: 79 91 58;            /* #4F5B3A */
+    --c-selection: 230 213 174;    /* #E6D5AE */
+    --shadow-lift: 0 1px 0 rgba(44,34,30,.04), 0 8px 24px -12px rgba(44,34,30,.25);
+  }
+
+  /* Chế độ tối: gỗ mun dưới ánh đèn dầu — chữ ngà, đồng sáng */
+  :root.dark {
+    color-scheme: dark;
+    --c-paper: 26 21 18;           /* #1A1512 */
+    --c-paper-deep: 34 27 23;      /* #221B17 */
+    --c-surface: 42 34 29;         /* #2A221D */
+    --c-surface-line: 74 61 51;    /* #4A3D33 */
+    --c-ink: 237 228 214;          /* #EDE4D6 */
+    --c-ink-soft: 196 182 165;     /* #C4B6A5 */
+    --c-ink-faint: 158 143 126;    /* #9E8F7E */
+    --c-brass: 197 160 89;         /* #C5A059 */
+    --c-brass-deep: 217 185 119;   /* #D9B977 — chữ đồng sáng trên nền tối */
+    --c-oxblood: 214 122 104;      /* #D67A68 */
+    --c-oxblood-light: 228 150 134;/* #E49686 */
+    --c-moss: 157 170 127;         /* #9DAA7F */
+    --c-selection: 94 74 40;       /* #5E4A28 */
+    --shadow-lift: 0 1px 0 rgba(0,0,0,.2), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    /* Khách lớn tuổi: chữ gốc 18px (mobile) / 20px (máy tính) — mọi cỡ chữ rem tự to theo */
+    font-size: 112.5%;
+  }
+  @media (min-width: 768px) {
+    html { font-size: 125%; }
+  }
+
+  body {
+    @apply bg-paper font-sans text-base font-normal leading-relaxed text-ink antialiased;
+    /* Thớ giấy bồi: nhiễu rất nhẹ, không ảnh hưởng độ đọc */
+    @apply transition-colors duration-300;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .36 0 0 0 0 .32 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-serif font-semibold text-ink;
+  }
+
+  ::selection {
+    background-color: rgb(var(--c-selection));
+    @apply text-ink;
+  }
+
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-brass;
+  }
+
+  /* Tôn trọng người dùng tắt chuyển động */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Nhãn chữ khắc: viết hoa, giãn chữ */
+  .label-engraved {
+    @apply font-sans text-base font-semibold text-ink-soft;
+  }
+
+  /* Liên kết có gạch chân mảnh chạy từ trái sang khi hover */
+  .link-quill {
+    @apply relative inline-block pb-0.5 transition-colors duration-300 ease-quill;
+    background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat;
+    transition-property: background-size, color;
+  }
+  .link-quill:hover,
+  .link-quill[aria-current='page'] {
+    background-size: 100% 1px;
+  }
+
+  /* Thẻ bề mặt */
+  .card-paper {
+    @apply rounded-sm border border-surface-line bg-surface;
+  }
+
+  /* Khung tranh mạ đồng — dùng cho ảnh sản phẩm */
+  .frame-brass {
+    @apply relative bg-surface p-2 shadow-frame;
+  }
+
+  /* Ô nhập liệu */
+  .field {
+    @apply w-full rounded-sm border border-surface-line bg-paper px-3 py-2.5 text-[15px] text-ink placeholder:text-ink-faint
+           transition-colors duration-200 focus:border-brass focus:outline-none;
+  }
+  .field[aria-invalid='true'] {
+    @apply border-oxblood;
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-surface-line)) transparent;
+  }
+}
